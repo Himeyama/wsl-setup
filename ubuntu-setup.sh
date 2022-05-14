@@ -2,6 +2,7 @@
 
 # 対話なし
 export DEBIAN_FRONTEND=noninteractive
+export LANG=ja_JP.UTF8
 pyenv_version=3.10.4
 
 # apt のデータ取得元を理研に変更
