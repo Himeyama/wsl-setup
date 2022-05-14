@@ -17,7 +17,7 @@ sudo apt install -y ubuntu-defaults-ja
 # man ページを日本語に
 sudo apt install -y language-pack-ja manpages-ja
 echo "export LANG=ja_JP.UTF8" | tee -a $HOME/.bashrc
-source $HOME/.bashrc
+. $HOME/.bashrc
 
 # 言語の変更
 sudo sed -i 's/# ja_JP.UTF-8 UTF-8/ja_JP.UTF-8 UTF-8/' /etc/locale.gen
@@ -47,8 +47,8 @@ if [[ -z $rbenv_bashrc ]]; then
     echo -e "\n# rbenv" | tee -a $HOME/.bashrc
     echo export PATH=\$PATH:\$HOME/.rbenv/bin | tee -a $HOME/.bashrc
     echo 'eval "$(rbenv init -)"' | tee -a $HOME/.bashrc
-    source $HOME/.bashrc
 fi
+. $HOME/.bashrc
 ruby_version=$(rbenv install -l 2>/dev/null | grep "^[0-9]" | tail -n 1)
 rbenv install $ruby_version
 rbenv global $ruby_version
@@ -76,8 +76,8 @@ if [[ -z $pyenv_bashrc ]]; then
     echo export PATH=\$PATH:\$HOME/.pyenv/bin | tee -a $HOME/.bashrc
     echo 'eval "$(pyenv init --path)"' | tee -a $HOME/.bashrc
     echo 'eval "$(pyenv virtualenv-init -)"' | tee -a $HOME/.bashrc
-    source $HOME/.bashrc
 fi
+. $HOME/.bashrc
 pyenv install 3.10.4
 pyenv global 3.10.4
 
@@ -91,5 +91,6 @@ sudo apt install -y nmap neofetch htop openssh-server git whois gcc
 sudo apt upgrade -y
 sudo apt autoremove -y
 
-ssh-keygen -f id_ed25519 -t ed25519 -N ""
+mkdir -p $HOME/.ssh
+ssh-keygen -f $HOME/.ssh/id_ed25519 -t ed25519 -N ""
 cat $HOME/.ssh/id_ed25519.pub
