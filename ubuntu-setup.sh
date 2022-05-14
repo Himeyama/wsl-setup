@@ -100,3 +100,6 @@ if test ! -f $HOME/.ssh/id_ed25519; then
     ssh-keygen -f $HOME/.ssh/id_ed25519 -t ed25519 -N ""
     cat $HOME/.ssh/id_ed25519.pub
 fi
+
+sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
