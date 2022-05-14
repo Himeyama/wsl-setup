@@ -32,7 +32,7 @@ sudo apt install -y \
     build-essential \
     libssl-dev \
     libyaml-dev \
-    libreadline6-dev \
+    libreadline-dev \
     zlib1g-dev \
     libncurses5-dev \
     libffi-dev \
@@ -84,7 +84,7 @@ fi
 
 
 # cargo & rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+curl -m 10 --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # 追加パッケージ
 sudo apt install -y nmap neofetch htop openssh-server git whois gcc
