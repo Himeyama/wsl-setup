@@ -17,8 +17,10 @@ sudo apt install -y ubuntu-defaults-ja
 
 # man ページを日本語に
 sudo apt install -y language-pack-ja manpages-ja
-echo "export LANG=ja_JP.UTF8" | tee -a $HOME/.bashrc
-. $HOME/.bashrc
+
+if [[ -z $(cat $HOME/.bashrc | grep LANG=ja_JP) ]]; then
+    echo "export LANG=ja_JP.UTF8" | tee -a $HOME/.bashrc
+fi
 
 # 言語の変更
 sudo sed -i 's/# ja_JP.UTF-8 UTF-8/ja_JP.UTF-8 UTF-8/' /etc/locale.gen
