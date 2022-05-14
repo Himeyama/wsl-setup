@@ -47,10 +47,9 @@ if test ! -d "$HOME/.rbenv"; then
         echo export PATH=\$PATH:\$HOME/.rbenv/bin | tee -a $HOME/.bashrc
         echo 'eval "$(rbenv init -)"' | tee -a $HOME/.bashrc
     fi
-    . $HOME/.bashrc
     ruby_version=$(rbenv install -l 2>/dev/null | grep "^[0-9]" | tail -n 1)
-    RUBY_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" rbenv install $ruby_version -v
-    rbenv global $ruby_version
+    RUBY_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" $HOME/.rbenv/bin/rbenv install $ruby_version -v
+    $HOME/.rbenv/bin/rbenv global $ruby_version
 fi
 
 
@@ -79,15 +78,13 @@ if test ! -d "$HOME/.pyenv"; then
         echo 'eval "$(pyenv init --path)"' | tee -a $HOME/.bashrc
         echo 'eval "$(pyenv virtualenv-init -)"' | tee -a $HOME/.bashrc
     fi
-    . $HOME/.bashrc
-    PYTHON_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" pyenv install $pyenv_version -v
-    pyenv global $pyenv_version
+    PYTHON_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" $HOME/.pyenv/bin/pyenv install $pyenv_version -v
+    $HOME/.pyenv/bin/pyenv global $pyenv_version
 fi
 
 
 # cargo & rust
-wget -q https://sh.rustup.rs -O- | sh -s -- -y
-source $HOME/.bashrc
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # 追加パッケージ
 sudo apt install -y nmap neofetch htop openssh-server git whois gcc
