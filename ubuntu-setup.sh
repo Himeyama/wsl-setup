@@ -2,6 +2,7 @@
 
 # 対話なし
 export DEBIAN_FRONTEND=noninteractive
+pyenv_version=3.10.4
 
 # apt のデータ取得元を理研に変更
 sudo sed -i.bak "s%http://[^ ]\+%http://ftp.riken.go.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
@@ -38,20 +39,19 @@ sudo apt install -y \
     libgdbm6 \
     libgdbm-dev \
     libdb-dev
-if test -d "$HOME/.rbenv"; then
-    rm -rf $HOME/.rbenv
+if test ! -d "$HOME/.rbenv"; then
+    wget -q https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer -O- | bash
+    rbenv_bashrc=$(cat $HOME/.bashrc | grep rbenv)
+    if [[ -z $rbenv_bashrc ]]; then
+        echo -e "\n# rbenv" | tee -a $HOME/.bashrc
+        echo export PATH=\$PATH:\$HOME/.rbenv/bin | tee -a $HOME/.bashrc
+        echo 'eval "$(rbenv init -)"' | tee -a $HOME/.bashrc
+    fi
+    . $HOME/.bashrc
+    ruby_version=$(rbenv install -l 2>/dev/null | grep "^[0-9]" | tail -n 1)
+    RUBY_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" rbenv install $ruby_version -v
+    rbenv global $ruby_version
 fi
-wget -q https://github.com/rbenv/rbenv-installer/raw/HEAD/bin/rbenv-installer -O- | bash
-rbenv_bashrc=$(cat $HOME/.bashrc | grep rbenv)
-if [[ -z $rbenv_bashrc ]]; then
-    echo -e "\n# rbenv" | tee -a $HOME/.bashrc
-    echo export PATH=\$PATH:\$HOME/.rbenv/bin | tee -a $HOME/.bashrc
-    echo 'eval "$(rbenv init -)"' | tee -a $HOME/.bashrc
-fi
-. $HOME/.bashrc
-ruby_version=$(rbenv install -l 2>/dev/null | grep "^[0-9]" | tail -n 1)
-rbenv install $ruby_version
-rbenv global $ruby_version
 
 
 # pyenv
@@ -69,28 +69,34 @@ sudo apt install -y make \
     libxml2-dev \
     libxmlsec1-dev \
     liblzma-dev
-wget -q https://pyenv.run -O- | bash
-pyenv_bashrc=$(cat $HOME/.bashrc | grep pyenv)
-if [[ -z $pyenv_bashrc ]]; then
-    echo -e "\n# pyenv" | tee -a $HOME/.bashrc
-    echo export PATH=\$PATH:\$HOME/.pyenv/bin | tee -a $HOME/.bashrc
-    echo 'eval "$(pyenv init --path)"' | tee -a $HOME/.bashrc
-    echo 'eval "$(pyenv virtualenv-init -)"' | tee -a $HOME/.bashrc
+
+if test ! -d "$HOME/.pyenv"; then
+    wget -q https://pyenv.run -O- | bash
+    pyenv_bashrc=$(cat $HOME/.bashrc | grep pyenv)
+    if [[ -z $pyenv_bashrc ]]; then
+        echo -e "\n# pyenv" | tee -a $HOME/.bashrc
+        echo export PATH=\$PATH:\$HOME/.pyenv/bin | tee -a $HOME/.bashrc
+        echo 'eval "$(pyenv init --path)"' | tee -a $HOME/.bashrc
+        echo 'eval "$(pyenv virtualenv-init -)"' | tee -a $HOME/.bashrc
+    fi
+    . $HOME/.bashrc
+    PYTHON_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" pyenv install $pyenv_version -v
+    pyenv global $pyenv_version
 fi
-. $HOME/.bashrc
-pyenv install 3.10.4
-pyenv global 3.10.4
 
 
 # cargo & rust
 wget -q https://sh.rustup.rs -O- | sh -s -- -y
 source $HOME/.bashrc
 
+# 追加パッケージ
 sudo apt install -y nmap neofetch htop openssh-server git whois gcc
 
 sudo apt upgrade -y
 sudo apt autoremove -y
 
 mkdir -p $HOME/.ssh
-ssh-keygen -f $HOME/.ssh/id_ed25519 -t ed25519 -N ""
-cat $HOME/.ssh/id_ed25519.pub
+if test ! -f $HOME/.ssh/id_ed25519; then
+    ssh-keygen -f $HOME/.ssh/id_ed25519 -t ed25519 -N ""
+    cat $HOME/.ssh/id_ed25519.pub
+fi
