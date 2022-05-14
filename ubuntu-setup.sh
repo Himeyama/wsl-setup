@@ -84,7 +84,7 @@ if test ! -d "$HOME/.pyenv"; then
     PYTHON_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" $HOME/.pyenv/bin/pyenv install $pyenv_version -v
     $HOME/.pyenv/bin/pyenv global $pyenv_version
 fi
-
+python -m pip install -U pip setuptools poetry ipykernel
 
 # cargo & rust
 curl -m 10 --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
