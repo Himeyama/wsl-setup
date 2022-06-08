@@ -12,7 +12,7 @@ sudo sed -i.bak "s%http://[^ ]\+%http://ftp.riken.go.jp/pub/Linux/ubuntu/%g" /et
 wget -q https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg -O- | sudo apt-key add -
 wget -q https://www.ubuntulinux.jp/ubuntu-jp-ppa-keyring.gpg -O- | sudo apt-key add -
 distrib_codename=$(cat /etc/lsb-release | grep DISTRIB_CODENAME | sed "s/.*=//")
-sudo wget https://www.ubuntulinux.jp/sources.list.d/$distrib_codename.list -O /etc/apt/sources.list.d/ubuntu-ja.list
+wget -q https://www.ubuntulinux.jp/sources.list.d/${distrib_codename}.list -O- | sudo tee /etc/apt/sources.list.d/ubuntu-ja.list
 sudo apt update
 sudo apt install -y ubuntu-defaults-ja
 
