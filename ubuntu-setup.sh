@@ -3,7 +3,7 @@
 # 対話なし
 export DEBIAN_FRONTEND=noninteractive
 export LANG=ja_JP.UTF8
-pyenv_version=3.10.4
+pyenv_version=3.9.12
 
 # apt のデータ取得元を理研に変更
 sudo sed -i.bak "s%http://[^ ]\+%http://ftp.riken.go.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
