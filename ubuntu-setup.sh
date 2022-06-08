@@ -13,11 +13,11 @@ wget -q https://www.ubuntulinux.jp/ubuntu-ja-archive-keyring.gpg -O- | sudo apt-
 wget -q https://www.ubuntulinux.jp/ubuntu-jp-ppa-keyring.gpg -O- | sudo apt-key add -
 distrib_codename=$(cat /etc/lsb-release | grep DISTRIB_CODENAME | sed "s/.*=//")
 wget -q https://www.ubuntulinux.jp/sources.list.d/${distrib_codename}.list -O- | sudo tee /etc/apt/sources.list.d/ubuntu-ja.list
-sudo apt update
-sudo apt install -y ubuntu-defaults-ja
+sudo http_proxy=$http_proxy apt update
+sudo http_proxy=$http_proxy apt install -y ubuntu-defaults-ja
 
 # man ページを日本語に
-sudo apt install -y language-pack-ja manpages-ja
+sudo http_proxy=$http_proxy apt install -y language-pack-ja manpages-ja
 
 if [[ -z $(cat $HOME/.bashrc | grep LANG=ja_JP) ]]; then
     echo "export LANG=ja_JP.UTF8" | tee -a $HOME/.bashrc
@@ -29,7 +29,7 @@ locale-gen --keep-existing
 
 # rbenv
 # https://github.com/rbenv/ruby-build/wiki#suggested-build-environment
-sudo apt install -y \
+sudo http_proxy=$http_proxy apt install -y \
     autoconf \
     bison \
     build-essential \
@@ -58,7 +58,7 @@ fi
 
 # pyenv
 # https://github.com/pyenv/pyenv/wiki
-sudo apt install -y make \
+sudo http_proxy=$http_proxy apt install -y make \
     libbz2-dev \
     libreadline-dev \
     libsqlite3-dev \
@@ -90,10 +90,10 @@ python -m pip install -U pip setuptools poetry ipykernel
 curl -m 10 --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 
 # 追加パッケージ
-sudo apt install -y nmap neofetch htop openssh-server git whois gcc
+sudo http_proxy=$http_proxy apt install -y nmap neofetch htop openssh-server git whois gcc
 
-sudo apt upgrade -y
-sudo apt autoremove -y
+sudo http_proxy=$http_proxy apt upgrade -y
+sudo http_proxy=$http_proxy apt autoremove -y
 
 mkdir -p $HOME/.ssh
 if test ! -f $HOME/.ssh/id_ed25519; then
