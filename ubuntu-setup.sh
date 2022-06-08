@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
+python_version=3.9.12
+
 # 対話なし
 export DEBIAN_FRONTEND=noninteractive
 export LANG=ja_JP.UTF8
-pyenv_version=3.9.12
 
 # apt のデータ取得元を理研に変更
 sudo sed -i.bak "s%http://[^ ]\+%http://ftp.riken.go.jp/pub/Linux/ubuntu/%g" /etc/apt/sources.list
@@ -47,7 +48,7 @@ if test ! -d "$HOME/.rbenv"; then
     rbenv_bashrc=$(cat $HOME/.bashrc | grep rbenv)
     if [[ -z $rbenv_bashrc ]]; then
         echo -e "\n# rbenv" | tee -a $HOME/.bashrc
-        echo export PATH=\$PATH:\$HOME/.rbenv/bin | tee -a $HOME/.bashrc
+        echo export PATH=\$HOME/.rbenv/bin:\$PATH | tee -a $HOME/.bashrc
         echo 'eval "$(rbenv init -)"' | tee -a $HOME/.bashrc
     fi
     ruby_version=$(rbenv install -l 2>/dev/null | grep "^[0-9]" | tail -n 1)
@@ -77,12 +78,12 @@ if test ! -d "$HOME/.pyenv"; then
     pyenv_bashrc=$(cat $HOME/.bashrc | grep pyenv)
     if [[ -z $pyenv_bashrc ]]; then
         echo -e "\n# pyenv" | tee -a $HOME/.bashrc
-        echo export PATH=\$PATH:\$HOME/.pyenv/bin | tee -a $HOME/.bashrc
+        echo export PATH=\$HOME/.pyenv/bin:\$PATH | tee -a $HOME/.bashrc
         echo 'eval "$(pyenv init --path)"' | tee -a $HOME/.bashrc
         echo 'eval "$(pyenv virtualenv-init -)"' | tee -a $HOME/.bashrc
     fi
-    PYTHON_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" $HOME/.pyenv/bin/pyenv install $pyenv_version -v
-    $HOME/.pyenv/bin/pyenv global $pyenv_version
+    PYTHON_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" $HOME/.pyenv/bin/pyenv install $python_version -v
+    $HOME/.pyenv/bin/pyenv global $python_version
 fi
 python -m pip install -U pip setuptools poetry ipykernel
 
