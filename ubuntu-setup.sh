@@ -54,11 +54,15 @@ if test ! -d "$HOME/.rbenv"; then
         echo export PATH=\$HOME/.rbenv/bin:\$PATH | tee -a $HOME/.bashrc
         echo 'eval "$(rbenv init -)"' | tee -a $HOME/.bashrc
     fi
+    source ~/.bashrc
+fi
+
+installed_ruby=$(rbenv versions)
+if [[ -z $installed_ruby ]]; then
     ruby_version=$(rbenv install -l 2>/dev/null | grep "^[0-9]" | tail -n 1)
     RUBY_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" $HOME/.rbenv/bin/rbenv install $ruby_version -v
     $HOME/.rbenv/bin/rbenv global $ruby_version
 fi
-
 
 # pyenv
 # https://github.com/pyenv/pyenv/wiki
@@ -85,15 +89,19 @@ if test ! -d "$HOME/.pyenv"; then
         echo 'eval "$(pyenv init --path)"' | tee -a $HOME/.bashrc
         echo 'eval "$(pyenv virtualenv-init -)"' | tee -a $HOME/.bashrc
     fi
+fi
+
+python_installed=$(pyenv versions | grep $python_version)
+if [[ -z $python_installed ]]; then
     PYTHON_CONFIGURE_OPTS="--enable-shared" MAKE_OPTS="-j" $HOME/.pyenv/bin/pyenv install $python_version -v
     $HOME/.pyenv/bin/pyenv global $python_version
+    python -m pip install -U pip setuptools poetry ipykernel
 fi
-python -m pip install -U pip setuptools poetry ipykernel
 
 # cargo & rust
 curl -m 10 --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 exist_cargo_path=$(grep cargo/bin .bashrc)
-if [[ $exist_cargo_path == "" ]]; then
+if [[ -z $exist_cargo_path ]]; then
     echo | tee -a ~/.bashrc
     echo Cargo Path | tee -a ~/.bashrc
     echo export PATH=\$PATH:\$HOME/.cargo/bin | tee -a ~/.bashrc
