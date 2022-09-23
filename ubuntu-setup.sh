@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
 python_version=3.9.12
+nameserver=1.1.1.1
+
+echo nameserver $nameserver | sudo tee /etc/resolv.conf
 
 # 対話なし
 export DEBIAN_FRONTEND=noninteractive
@@ -89,6 +92,12 @@ python -m pip install -U pip setuptools poetry ipykernel
 
 # cargo & rust
 curl -m 10 --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+exist_cargo_path=$(grep cargo/bin .bashrc)
+if [[ $exist_cargo_path == "" ]]; then
+    echo | tee -a ~/.bashrc
+    echo Cargo Path | tee -a ~/.bashrc
+    echo export PATH=\$PATH:\$HOME/.cargo/bin | tee -a ~/.bashrc
+fi
 
 # 追加パッケージ
 sudo http_proxy=$http_proxy apt install -y nmap neofetch htop openssh-server git whois gcc
@@ -106,4 +115,3 @@ sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
 
 echo -e "[network]\ngenerateResolvConf = false" | sudo tee /etc/wsl.conf
-echo nameserver 1.1.1.1 | sudo tee /etc/resolv.conf
