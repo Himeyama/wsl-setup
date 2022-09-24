@@ -123,3 +123,4 @@ sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
 sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
 
 echo -e "[network]\ngenerateResolvConf = false" | sudo tee /etc/wsl.conf
+echo -e "\n[boot]\nsystemd=true" | sudo tee -a /etc/wsl.conf
